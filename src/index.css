@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-space-dark: #0b001a;
+  --color-space-purple: #1a0b2e;
+  --color-love-pink: #ff007f;
+  --color-soft-lavender: #9d4edd;
+  --font-sans: 'Inter', 'sans-serif';
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #050505;
+  /* Deep black/purple fallback */
+}
