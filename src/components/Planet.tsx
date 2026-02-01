@@ -51,10 +51,20 @@ export default function Planet() {
         }
 
         if (glowRef.current) {
-            // Glow pulse effect
-            const pulse = 0.9 + Math.sin(state.clock.elapsedTime * 2) * 0.1;
+            // Heartbeat Pulse Effect (Lub-Dub)
+            const t = state.clock.elapsedTime;
+            // Combine two sine waves for the heartbeat rhythm pattern
+            // Main pulse + secondary pulse
+            const pulse = Math.sin(t * 3) * 0.1 + Math.sin(t * 3 + Math.PI) * 0.05 + 1;
+            // Normalize roughly around 1.0
+
+            // Sharper beat using power
+            const heartbeat = Math.pow(Math.sin(t * 3), 4) * 0.2 + 0.9;
+
+            glowRef.current.scale.setScalar(heartbeat);
+
             const material = glowRef.current.material as THREE.MeshBasicMaterial;
-            material.opacity = 0.2 * pulse;
+            material.opacity = 0.3 * (heartbeat - 0.8) * 5; // Modulate opacity with beat
         }
 
         if (particlesRef.current) {
@@ -104,21 +114,11 @@ export default function Planet() {
                 />
 
                 {/* Core Glow */}
-                <Sphere args={[1.4, 32, 32]}>
+                <Sphere ref={glowRef} args={[1.4, 32, 32]}>
                     <meshBasicMaterial
-                        color="#f791c4ff"
+                        color="#ff1493" // Vibrant Deep Pink
                         transparent
-                        opacity={0.3}
-                        blending={THREE.AdditiveBlending}
-                    />
-                </Sphere>
-
-                {/* Atmospheric Glow (Outer) */}
-                <Sphere ref={atmosphereRef} args={[1.8, 32, 32]}> {/* Reduced geometry */}
-                    <meshPhongMaterial
-                        color="#f092c4ff"
-                        transparent
-                        opacity={0.2}
+                        opacity={0.5}
                         blending={THREE.AdditiveBlending}
                         side={THREE.BackSide}
                     />

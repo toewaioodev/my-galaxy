@@ -11,6 +11,7 @@ interface CometProps {
     color: string;
     image: string;
     orbitRotation: [number, number, number];
+    onClick?: () => void;
 }
 
 // Simple linear interpolation helper
@@ -18,7 +19,7 @@ const lerp = (start: number, end: number, t: number) => {
     return start * (1 - t) + end * t;
 };
 
-export default function Comet({ radiusX, radiusZ, speed, startAngle, color, image, orbitRotation }: CometProps) {
+export default function Comet({ radiusX, radiusZ, speed, startAngle, color, image, orbitRotation, onClick }: CometProps) {
     const meshRef = useRef<THREE.Mesh>(null);
     const [hovered, setHovered] = useState(false);
     const angleRef = useRef(startAngle);
@@ -46,9 +47,12 @@ export default function Comet({ radiusX, radiusZ, speed, startAngle, color, imag
         <group rotation={orbitRotation}> {/* Tilt the entire orbit */}
             <mesh
                 ref={meshRef}
-                onPointerOver={() => setHovered(true)}
-                onPointerOut={() => setHovered(false)}
-                onClick={() => console.log("Clicked memory!")}
+                onPointerOver={() => { setHovered(true); document.body.style.cursor = 'pointer'; }}
+                onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    if (onClick) onClick();
+                }}
             >
                 {/* <sphereGeometry args={[0.08, 8, 8]} /> 
                         <meshBasicMaterial color={color} toneMapped={false} /> */}

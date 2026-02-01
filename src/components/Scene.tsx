@@ -6,6 +6,7 @@ import TextRing from './TextRing';
 import StarField from './StarField';
 import Comet from './Comet';
 import ShootingStars from './ShootingStar';
+import MeteorShower from './MeteorShower';
 
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
@@ -32,14 +33,14 @@ function IntroCamera({ onFinish }: { onFinish: () => void }) {
     return null;
 }
 
-export default function Scene() {
+export default function Scene({ onSelectMemory }: { onSelectMemory: (memory: any) => void }) {
     const [introFinished, setIntroFinished] = useState(false);
 
     return (
         <Canvas
             camera={{ position: [0, 0, 2], fov: 45 }} // Start text camera CLOSE (z=2)
             dpr={[1, 1.5]}
-            gl={{ antialias: true }}
+            gl={{ antialias: true, preserveDrawingBuffer: true, alpha: false }}
         >
             <Suspense fallback={null}>
                 <ShootingStars />
@@ -75,22 +76,26 @@ export default function Scene() {
                 <StarField />
                 {/* <Stars /> removed to prevent duplication overload */}
 
-                {/* Shooting Stars */}
+                {/* Shooting Stars (Random) */}
+                <ShootingStars />
+
+                {/* One-time Meteor Shower Event
+                <MeteorShower /> */}
 
 
                 {/* Memory Comets */}
                 {Array.from({ length: 350 }).map((_, i) => {
                     // Define your list of memory images here
                     const memories = [
-                        "/cp-1.jpeg",
-                        "/cp-2.jpeg",
-                        "/cp-3.jpeg",
+                        { image: "/cp-1.jpeg", message: "Our first date..." },
+                        { image: "/cp-2.jpeg", message: "That time we got lost..." },
+                        { image: "/cp-3.jpeg", message: "Forever and always." },
                         // Add more filenames here as you add them to the public folder
                         // "/photo1.jpg",
                         // "/photo2.jpg" 
                     ];
 
-                    const randomImage = memories[i % memories.length]; // Cycle through images
+                    const randomMemory = memories[i % memories.length]; // Cycle through images
 
                     return (
                         <Comet
@@ -100,7 +105,8 @@ export default function Scene() {
                             speed={0.1 + Math.random() * 0.01}
                             startAngle={Math.random() * Math.PI * 2}
                             color={["#ff66cc", "#9d4edd", "#00ccff", "#ffcc00"][Math.floor(Math.random() * 4)]}
-                            image={randomImage}
+                            image={randomMemory.image}
+                            onClick={() => onSelectMemory(randomMemory)}
                             orbitRotation={[
                                 (Math.random() - 0.5) * 0.1,
                                 9,

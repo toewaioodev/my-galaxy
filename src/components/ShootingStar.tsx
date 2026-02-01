@@ -21,7 +21,7 @@ function SingleShootingStar() {
         }
 
         if (active && ref.current) {
-            ref.current.position.x -= delta * 25; // Move left fast
+            ref.current.position.x -= delta * 15; // Move left fast
             ref.current.position.y -= delta * 2; // Slight dip
 
             if (ref.current.position.x < -100) {
@@ -33,10 +33,10 @@ function SingleShootingStar() {
     return (
         <group>
             {active && (
-                <Trail width={4} length={6} color={new THREE.Color("red").multiplyScalar(2)} attenuation={(t) => t}>
+                <Trail width={4} length={6} color={new THREE.Color("#ff00cc").multiplyScalar(2)} attenuation={(t) => t}>
                     <mesh ref={ref} position={startPos}>
                         <sphereGeometry args={[0.08]} />
-                        <meshBasicMaterial color={new THREE.Color("orange").multiplyScalar(5)} toneMapped={false} />
+                        <meshBasicMaterial color={new THREE.Color("red").multiplyScalar(2)} toneMapped={false} />
                     </mesh>
                 </Trail>
             )}
